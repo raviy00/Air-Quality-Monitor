@@ -1,13 +1,13 @@
 /*
  * =========================================================
  *  Air Quality Monitor — ESP32 + MQ-135
- *  Repository: https://github.com/YOUR_USERNAME/AirQualityMonitor
+ *  Repository: https://github.com/raviy00/Air-Quality-Monitor
  * =========================================================
  *  Features:
  *    - CO2 PPM reading via MQ-135
  *    - WiFi web dashboard (dark UI, live chart)
  *    - IP-based approximate location (auto)
- *    - Exact GPS via phone browser (data: URI trick)
+ *    - Exact GPS via GitHub Pages HTTPS helper (no mixed-content issue)
  *    - Google Maps link
  * =========================================================
  *  Libraries needed (install via Arduino Library Manager):
@@ -23,8 +23,8 @@
 // ─────────────────────────────────────────────────────────────────
 //  WiFi Credentials  ← CHANGE THESE
 // ─────────────────────────────────────────────────────────────────
-const char* ssid     = "YOUR_WIFI_NAME";
-const char* password = "YOUR_WIFI_PASSWORD";
+const char* ssid     = "YOUR_WIFI_NAME";      // ← CHANGE THIS (do not push to GitHub)
+const char* password = "YOUR_WIFI_PASSWORD";  // ← CHANGE THIS (do not push to GitHub)
 
 // ─────────────────────────────────────────────────────────────────
 //  Hardware Config
@@ -133,8 +133,8 @@ const char DASHBOARD[] PROGMEM = R"rawhtml(
 
   <div class="loc-card">
     <h3>&#128205; Exact GPS Location</h3>
-    <div id="loc-text">Tap the button below to get your exact GPS location via your phone.</div>
-    <button id="gps-btn" onclick="openGPSHelper()">&#128269; Get Exact GPS from Phone</button>
+    <div id="loc-text">Use the GitHub Pages helper to send your exact GPS location.</div>
+    <button id="gps-btn" onclick="openGPSHelper()">&#128279; Open GPS Helper (GitHub Pages)</button>
   </div>
 
   <div class="scale">
@@ -258,73 +258,11 @@ const char DASHBOARD[] PROGMEM = R"rawhtml(
     }
 
     function openGPSHelper() {
-      const esp32 = window.location.origin;
-      const page = `<!DOCTYPE html>
-<html><head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GPS Helper</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:sans-serif;background:#0f172a;color:#e2e8f0;
-       display:flex;flex-direction:column;align-items:center;
-       justify-content:center;min-height:100vh;padding:24px;text-align:center}
-  h2{font-size:1.3rem;margin-bottom:12px}
-  p{color:#94a3b8;font-size:.85rem;margin-bottom:24px;line-height:1.6;max-width:300px}
-  button{background:#2563eb;color:#fff;border:none;border-radius:14px;
-         padding:16px 32px;font-size:1rem;cursor:pointer;
-         width:100%;max-width:300px;font-weight:600}
-  button:disabled{background:#1e3a6e;color:#64748b}
-  #status{margin-top:20px;font-size:.88rem;line-height:1.7;color:#38bdf8;min-height:50px}
-  a{color:#60a5fa;text-decoration:none}
-</style></head><body>
-<h2>&#128205; GPS Helper</h2>
-<p>This page gets your exact GPS location from your phone and sends it to the ESP32 monitor on your local network.</p>
-<button id="btn" onclick="go()">Allow GPS &amp; Send to ESP32</button>
-<div id="status"></div>
-<script>
-function go(){
-  const btn=document.getElementById('btn');
-  const st=document.getElementById('status');
-  btn.disabled=true;
-  btn.textContent='Getting location...';
-  st.textContent='Waiting for GPS signal...';
-  navigator.geolocation.getCurrentPosition(
-    pos=>{
-      const lat=pos.coords.latitude;
-      const lng=pos.coords.longitude;
-      const acc=Math.round(pos.coords.accuracy);
-      st.textContent='Got GPS! Sending to ESP32...';
-      fetch('${esp32}/api/setlocation',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({lat,lng,acc})
-      })
-      .then(r=>r.json())
-      .then(()=>{
-        st.innerHTML='&#9989; Done! Accuracy ~'+acc+' m<br><br>'+
-          '<a href="${esp32}">&#8592; Back to Dashboard</a>';
-        btn.textContent='&#9989; Sent!';
-      })
-      .catch(()=>{
-        st.innerHTML='&#10060; Could not reach ESP32.<br>'+
-          'Make sure you are on the same WiFi.<br><br>'+
-          'Coordinates: '+lat.toFixed(6)+', '+lng.toFixed(6)+
-          '<br>Accuracy ~'+acc+' m';
-        btn.textContent='Retry';
-        btn.disabled=false;
-      });
-    },
-    err=>{
-      const msgs={1:'Permission denied.',2:'Position unavailable.',3:'Timed out.'};
-      st.textContent='Error: '+(msgs[err.code]||err.message);
-      btn.textContent='Try Again';
-      btn.disabled=false;
-    },
-    {enableHighAccuracy:true,timeout:20000,maximumAge:0}
-  );
-}
-<\/script></body></html>`;
-      window.open('data:text/html;charset=utf-8,' + encodeURIComponent(page), '_blank');
+      // Opens the GitHub Pages GPS helper (served over HTTPS — GPS works!)
+      // Pre-fills the ESP32 IP so the helper knows where to send the coordinates.
+      const ip  = window.location.hostname;
+      const url = 'https://raviy00.github.io/Air-Quality-Monitor/?esp=' + ip;
+      window.open(url, '_blank');
     }
 
     fetchData();
@@ -402,6 +340,33 @@ void handleSetLocationOptions() {
 }
 
 // ─────────────────────────────────────────────────────────────────
+//  GET /setgps?lat=xx&lng=yy&acc=zz
+//  Called by GitHub Pages GPS helper via anchor navigation.
+//  Browser allows HTTPS→HTTP navigation (unlike fetch).
+// ─────────────────────────────────────────────────────────────────
+void handleSetGPS() {
+  if (server.hasArg("lat") && server.hasArg("lng")) {
+    g_lat     = server.arg("lat").toFloat();
+    g_lng     = server.arg("lng").toFloat();
+    g_gps_acc = server.hasArg("acc") ? server.arg("acc").toInt() : 0;
+
+    unsigned long s = millis() / 1000;
+    if      (s < 60)   g_gps_time = String(s)       + "s ago";
+    else if (s < 3600) g_gps_time = String(s / 60)  + "m ago";
+    else               g_gps_time = String(s / 3600) + "h ago";
+
+    Serial.printf("GPS saved via GitHub Pages: %.6f, %.6f  acc:%d m\n",
+                  g_lat, g_lng, g_gps_acc);
+
+    // Redirect straight to dashboard after saving
+    server.sendHeader("Location", "/");
+    server.send(302, "text/plain", "Redirecting to dashboard...");
+  } else {
+    server.send(400, "text/plain", "Missing lat or lng parameters");
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
 //  Setup
 // ─────────────────────────────────────────────────────────────────
 void setup() {
@@ -441,6 +406,7 @@ void setup() {
   server.on("/api/location",        handleGetLocation);
   server.on("/api/setlocation", HTTP_POST,    handleSetLocation);
   server.on("/api/setlocation", HTTP_OPTIONS, handleSetLocationOptions);
+  server.on("/setgps",              handleSetGPS);   // ← GitHub Pages GPS helper endpoint
   server.begin();
   Serial.println("Web server started.");
 }

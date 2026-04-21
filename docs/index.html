@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPS Helper — Air Quality Monitor</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 24px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+
+    .icon { font-size: 3rem; text-align: center; margin-bottom: 12px; }
+
+    h1 {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    /* IP Input section */
+    .ip-section { margin-bottom: 20px; }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .ip-row { display: flex; gap: 8px; }
+
+    input[type="text"] {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #e2e8f0;
+      font-size: 1rem;
+      font-family: 'Inter', monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { border-color: #3b82f6; }
+
+    .save-btn {
+      background: #1e3a6e;
+      color: #93c5fd;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .save-btn:active { background: #1e40af; }
+
+    .hint {
+      font-size: 0.72rem;
+      color: #475569;
+      margin-top: 6px;
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid #334155;
+      margin: 24px 0;
+    }
+
+    /* GPS button */
+    .gps-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s, transform 0.1s;
+      margin-bottom: 16px;
+    }
+
+    .gps-btn:active { transform: scale(0.98); opacity: 0.9; }
+    .gps-btn:disabled {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #475569;
+      cursor: default;
+      transform: none;
+    }
+
+    /* Status */
+    #status {
+      min-height: 24px;
+      font-size: 0.85rem;
+      text-align: center;
+      color: #38bdf8;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    /* Result box */
+    #result-box {
+      display: none;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 4px;
+    }
+
+    #result-box .coord-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+
+    #result-box .coord-label { color: #64748b; font-size: 0.75rem; }
+    #result-box .coord-value { color: #38bdf8; font-weight: 600; font-family: monospace; }
+
+    #send-link {
+      display: block;
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px;
+      background: #15803d;
+      color: white;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: center;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    #send-link:active { background: #166534; }
+
+    .acc-badge {
+      display: inline-block;
+      background: #052e16;
+      color: #4ade80;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    /* Steps */
+    .steps {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #1e293b;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .step-num {
+      background: #334155;
+      color: #94a3b8;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-txt { font-size: 0.8rem; color: #94a3b8; line-height: 1.5; }
+
+    .footer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #334155;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="icon">📍</div>
+  <h1>GPS Helper</h1>
+  <p class="subtitle">
+    Gets your exact location over HTTPS and sends it to your ESP32 Air Quality Monitor.
+  </p>
+
+  <!-- ESP32 IP input -->
+  <div class="ip-section">
+    <label>ESP32 IP Address</label>
+    <div class="ip-row">
+      <input type="text" id="esp-ip" placeholder="192.168.1.42" inputmode="decimal">
+      <button class="save-btn" onclick="saveIP()">💾 Save</button>
+    </div>
+    <p class="hint">Find this in Arduino Serial Monitor after uploading the sketch.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Status -->
+  <div id="status">Ready. Tap the button below.</div>
+
+  <!-- Result box (hidden until GPS obtained) -->
+  <div id="result-box">
+    <div class="acc-badge" id="acc-badge">Accuracy: —</div>
+    <div class="coord-row">
+      <span class="coord-label">Latitude</span>
+      <span class="coord-value" id="lat-val">—</span>
+    </div>
+    <div class="coord-row">
+      <span class="coord-label">Longitude</span>
+      <span class="coord-value" id="lng-val">—</span>
+    </div>
+    <a id="send-link" href="#" target="_self">✅ Tap Here to Send to ESP32</a>
+  </div>
+
+  <!-- GPS button -->
+  <button class="gps-btn" id="gps-btn" onclick="getGPS()">
+    📡 Get My GPS Location
+  </button>
+
+  <!-- How to use guide -->
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-txt">Enter your ESP32's IP from Serial Monitor above and tap Save.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-txt">Tap "Get My GPS Location" and allow location permission.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-txt">Tap the green "Send to ESP32" button that appears.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-txt">You'll be taken to the dashboard with your exact location pinned.</div>
+    </div>
+  </div>
+</div>
+
+<p class="footer">
+  Air Quality Monitor &nbsp;·&nbsp;
+  <a href="https://github.com/raviy00/Air-Quality-Monitor" style="color:#334155">GitHub</a>
+</p>
+
+<script>
+  // ── Load IP: from URL param ?esp=, then localStorage ────────
+  const ipInput  = document.getElementById('esp-ip');
+  const urlParam = new URLSearchParams(window.location.search).get('esp');
+  const saved    = urlParam || localStorage.getItem('esp32_ip') || '';
+  if (saved) {
+    ipInput.value = saved;
+    localStorage.setItem('esp32_ip', saved);
+  }
+
+  function saveIP() {
+    const val = ipInput.value.trim();
+    if (val) {
+      localStorage.setItem('esp32_ip', val);
+      ipInput.style.borderColor = '#22c55e';
+      setTimeout(() => ipInput.style.borderColor = '', 1000);
+    }
+  }
+
+  // ── Get GPS ──────────────────────────────────────────────────
+  function getGPS() {
+    const btn = document.getElementById('gps-btn');
+    const st  = document.getElementById('status');
+
+    const ip = ipInput.value.trim() || localStorage.getItem('esp32_ip') || '';
+    if (!ip) {
+      st.style.color = '#f87171';
+      st.textContent = '⚠️ Please enter your ESP32 IP address first!';
+      ipInput.focus();
+      return;
+    }
+
+    // Save IP if not saved yet
+    localStorage.setItem('esp32_ip', ip);
+
+    if (!navigator.geolocation) {
+      st.style.color = '#f87171';
+      st.textContent = 'GPS not supported on this browser.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Getting location...';
+    st.style.color  = '#38bdf8';
+    st.textContent  = 'Waiting for GPS signal...';
+
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const acc = Math.round(pos.coords.accuracy);
+
+        // Update UI
+        document.getElementById('lat-val').textContent  = lat.toFixed(6);
+        document.getElementById('lng-val').textContent  = lng.toFixed(6);
+        document.getElementById('acc-badge').textContent = '~' + acc + ' metres accuracy';
+
+        // Build the ESP32 URL — a plain navigation link (not fetch)
+        // This works even from HTTPS → HTTP because it's a user-initiated anchor tap
+        const url = 'http://' + ip + '/setgps?lat=' + lat + '&lng=' + lng + '&acc=' + acc;
+        document.getElementById('send-link').href = url;
+        document.getElementById('result-box').style.display = 'block';
+
+        st.style.color  = '#4ade80';
+        st.textContent  = '✅ GPS obtained! Tap the green button below to send.';
+        btn.textContent = '🔄 Refresh GPS';
+        btn.disabled    = false;
+      },
+      err => {
+        const msgs = {
+          1: 'Permission denied — please allow location access.',
+          2: 'Position unavailable. Try outdoors.',
+          3: 'Timed out. Try again.'
+        };
+        st.style.color  = '#f87171';
+        st.textContent  = '❌ ' + (msgs[err.code] || err.message);
+        btn.textContent = '📡 Try Again';
+        btn.disabled    = false;
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+    );
+  }
+</script>
+
+</body>
+</html>
