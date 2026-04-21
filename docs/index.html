@@ -17,60 +17,48 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      padding: 24px 16px;
     }
+
+    .header {
+      text-align: center;
+      padding: 20px 0 28px;
+    }
+
+    .header .icon { font-size: 2.8rem; margin-bottom: 8px; }
+    .header h1   { font-size: 1.3rem; font-weight: 700; color: #f1f5f9; }
+    .header p    { font-size: 0.82rem; color: #64748b; margin-top: 6px; line-height: 1.6; }
 
     .card {
       background: #1e293b;
-      border-radius: 24px;
-      padding: 32px 24px;
+      border-radius: 20px;
+      padding: 24px;
       width: 100%;
       max-width: 400px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      margin-bottom: 14px;
     }
 
-    .icon { font-size: 3rem; text-align: center; margin-bottom: 12px; }
-
-    h1 {
-      text-align: center;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #f1f5f9;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      text-align: center;
-      font-size: 0.85rem;
+    .card-title {
+      font-size: 0.68rem;
       color: #64748b;
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    /* IP Input section */
-    .ip-section { margin-bottom: 20px; }
-
-    label {
-      display: block;
-      font-size: 0.75rem;
-      color: #94a3b8;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
+      letter-spacing: 1.2px;
+      margin-bottom: 14px;
     }
+
+    label { font-size: 0.78rem; color: #94a3b8; margin-bottom: 6px; display: block; }
 
     .ip-row { display: flex; gap: 8px; }
 
     input[type="text"] {
       flex: 1;
       background: #0f172a;
-      border: 1px solid #334155;
+      border: 1.5px solid #334155;
       border-radius: 12px;
-      padding: 12px 16px;
+      padding: 12px 14px;
       color: #e2e8f0;
       font-size: 1rem;
-      font-family: 'Inter', monospace;
+      font-family: monospace;
       outline: none;
       transition: border-color 0.2s;
     }
@@ -78,256 +66,276 @@
     input[type="text"]:focus { border-color: #3b82f6; }
 
     .save-btn {
+      padding: 12px 16px;
       background: #1e3a6e;
       color: #93c5fd;
       border: none;
       border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 700;
       cursor: pointer;
-      font-weight: 600;
-      white-space: nowrap;
     }
-
-    .save-btn:active { background: #1e40af; }
 
     .hint {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: #475569;
       margin-top: 6px;
+      line-height: 1.5;
     }
 
-    /* Divider */
-    .divider {
-      border: none;
-      border-top: 1px solid #334155;
-      margin: 24px 0;
-    }
-
-    /* GPS button */
+    /* GPS Button */
     .gps-btn {
       width: 100%;
       padding: 16px;
       background: linear-gradient(135deg, #2563eb, #7c3aed);
-      color: white;
+      color: #fff;
       border: none;
       border-radius: 16px;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      letter-spacing: 0.5px;
       transition: opacity 0.2s, transform 0.1s;
-      margin-bottom: 16px;
+      letter-spacing: 0.3px;
     }
 
-    .gps-btn:active { transform: scale(0.98); opacity: 0.9; }
+    .gps-btn:active  { transform: scale(0.98); }
     .gps-btn:disabled {
       background: #1e293b;
-      border: 1px solid #334155;
+      border: 1.5px solid #334155;
       color: #475569;
       cursor: default;
-      transform: none;
     }
 
     /* Status */
     #status {
-      min-height: 24px;
-      font-size: 0.85rem;
       text-align: center;
+      font-size: 0.85rem;
+      min-height: 22px;
       color: #38bdf8;
+      margin-bottom: 6px;
       line-height: 1.6;
-      margin-bottom: 16px;
     }
 
-    /* Result box */
-    #result-box {
-      display: none;
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 16px;
-      padding: 18px;
-      margin-top: 4px;
-    }
+    /* Coordinates result */
+    #coords-card { display: none; }
 
-    #result-box .coord-row {
+    .coord-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
-      margin-bottom: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #334155;
     }
 
-    #result-box .coord-label { color: #64748b; font-size: 0.75rem; }
-    #result-box .coord-value { color: #38bdf8; font-weight: 600; font-family: monospace; }
+    .coord-row:last-of-type { border-bottom: none; }
 
-    #send-link {
-      display: block;
-      width: 100%;
-      margin-top: 16px;
-      padding: 14px;
-      background: #15803d;
-      color: white;
-      border-radius: 14px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-align: center;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
+    .coord-label { font-size: 0.73rem; color: #64748b; }
+    .coord-value { font-size: 0.88rem; color: #38bdf8; font-weight: 600; font-family: monospace; }
 
-    #send-link:active { background: #166534; }
-
-    .acc-badge {
+    .acc-chip {
       display: inline-block;
       background: #052e16;
       color: #4ade80;
       border-radius: 20px;
-      padding: 2px 10px;
+      padding: 3px 12px;
       font-size: 0.72rem;
       font-weight: 600;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
+
+    /* QR Code card */
+    #qr-card { display: none; }
+
+    .qr-instruction {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      text-align: center;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .qr-instruction strong { color: #f1f5f9; }
+
+    .qr-wrap {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .qr-wrap img { width: 200px; height: 200px; display: block; }
 
     /* Steps */
-    .steps {
-      margin-top: 24px;
-      padding-top: 20px;
-      border-top: 1px solid #1e293b;
-    }
+    .steps-list { list-style: none; }
 
-    .step {
+    .steps-list li {
       display: flex;
       gap: 12px;
       align-items: flex-start;
-      margin-bottom: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #334155;
+      font-size: 0.82rem;
+      color: #94a3b8;
+      line-height: 1.5;
     }
+
+    .steps-list li:last-child { border-bottom: none; }
 
     .step-num {
       background: #334155;
       color: #94a3b8;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       flex-shrink: 0;
+      margin-top: 1px;
     }
 
-    .step-txt { font-size: 0.8rem; color: #94a3b8; line-height: 1.5; }
+    /* Fallback link */
+    .fallback {
+      text-align: center;
+      font-size: 0.72rem;
+      color: #475569;
+      margin-top: 10px;
+    }
+
+    .fallback a { color: #60a5fa; word-break: break-all; }
 
     .footer {
       text-align: center;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #334155;
-      margin-top: 20px;
+      padding: 20px 0 8px;
     }
+
+    .footer a { color: #334155; }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <div class="icon">📍</div>
-  <h1>GPS Helper</h1>
-  <p class="subtitle">
-    Gets your exact location over HTTPS and sends it to your ESP32 Air Quality Monitor.
-  </p>
+  <div class="header">
+    <div class="icon">📡</div>
+    <h1>GPS Helper</h1>
+    <p>Gets your precise location over HTTPS<br>and sends it to your ESP32 via QR code.</p>
+  </div>
 
-  <!-- ESP32 IP input -->
-  <div class="ip-section">
-    <label>ESP32 IP Address</label>
+  <!-- Step 1 — ESP32 IP -->
+  <div class="card">
+    <div class="card-title">Step 1 — ESP32 IP Address</div>
+    <label>Enter the IP shown in Arduino Serial Monitor</label>
     <div class="ip-row">
-      <input type="text" id="esp-ip" placeholder="192.168.1.42" inputmode="decimal">
+      <input type="text" id="esp-ip" placeholder="192.168.91.144" inputmode="decimal">
       <button class="save-btn" onclick="saveIP()">💾 Save</button>
     </div>
-    <p class="hint">Find this in Arduino Serial Monitor after uploading the sketch.</p>
+    <p class="hint">Example: 192.168.91.144 &nbsp;•&nbsp; Must be on same WiFi as ESP32</p>
   </div>
 
-  <hr class="divider">
-
-  <!-- Status -->
-  <div id="status">Ready. Tap the button below.</div>
-
-  <!-- Result box (hidden until GPS obtained) -->
-  <div id="result-box">
-    <div class="acc-badge" id="acc-badge">Accuracy: —</div>
-    <div class="coord-row">
-      <span class="coord-label">Latitude</span>
-      <span class="coord-value" id="lat-val">—</span>
+  <!-- Step 2 — Get GPS -->
+  <div class="card">
+    <div class="card-title">Step 2 — Get Your GPS Location</div>
+    <div id="status">Ready. Tap the button below.</div>
+    <div id="coords-card" class="card" style="background:#0f172a;padding:14px;margin-bottom:14px">
+      <div style="margin-bottom:10px">
+        <span class="acc-chip" id="acc-chip">Accuracy —</span>
+      </div>
+      <div class="coord-row">
+        <span class="coord-label">Latitude</span>
+        <span class="coord-value" id="lat-val">—</span>
+      </div>
+      <div class="coord-row">
+        <span class="coord-label">Longitude</span>
+        <span class="coord-value" id="lng-val">—</span>
+      </div>
     </div>
-    <div class="coord-row">
-      <span class="coord-label">Longitude</span>
-      <span class="coord-value" id="lng-val">—</span>
-    </div>
-    <a id="send-link" href="#" target="_self">✅ Tap Here to Send to ESP32</a>
+    <button class="gps-btn" id="gps-btn" onclick="getGPS()">📡 Get My GPS Location</button>
   </div>
 
-  <!-- GPS button -->
-  <button class="gps-btn" id="gps-btn" onclick="getGPS()">
-    📡 Get My GPS Location
-  </button>
-
-  <!-- How to use guide -->
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-txt">Enter your ESP32's IP from Serial Monitor above and tap Save.</div>
+  <!-- Step 3 — QR Code -->
+  <div class="card" id="qr-card">
+    <div class="card-title">Step 3 — Scan QR Code to Send to ESP32</div>
+    <p class="qr-instruction">
+      <strong>Open your phone camera</strong> and point it at this QR code.<br>
+      Tap the link that appears — it sends your GPS to the ESP32 and opens the dashboard.
+    </p>
+    <div class="qr-wrap">
+      <img id="qr-img" src="" alt="QR Code loading...">
     </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-txt">Tap "Get My GPS Location" and allow location permission.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-txt">Tap the green "Send to ESP32" button that appears.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <div class="step-txt">You'll be taken to the dashboard with your exact location pinned.</div>
+    <p class="qr-instruction" style="font-size:0.75rem;color:#475569">
+      ✅ No mixed-content issues — camera opens HTTP directly,<br>bypassing browser HTTPS restrictions.
+    </p>
+    <div class="fallback">
+      Or tap this link directly (same network only):<br>
+      <a id="fallback-link" href="#" target="_blank">—</a>
     </div>
   </div>
-</div>
 
-<p class="footer">
-  Air Quality Monitor &nbsp;·&nbsp;
-  <a href="https://github.com/raviy00/Air-Quality-Monitor" style="color:#334155">GitHub</a>
-</p>
+  <!-- How it works -->
+  <div class="card">
+    <div class="card-title">How It Works</div>
+    <ul class="steps-list">
+      <li>
+        <div class="step-num">1</div>
+        <div>Enter your ESP32 IP and tap Save.</div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div>Tap "Get My GPS Location" and allow location permission when asked.</div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div>A QR code appears. Open your <strong>phone camera</strong> and scan it.</div>
+      </li>
+      <li>
+        <div class="step-num">4</div>
+        <div>Tap the notification — your phone opens the ESP32 dashboard with exact GPS pinned. 📍</div>
+      </li>
+    </ul>
+  </div>
+
+  <p class="footer">
+    Air Quality Monitor &nbsp;·&nbsp;
+    <a href="https://github.com/raviy00/Air-Quality-Monitor">GitHub ↗</a>
+  </p>
 
 <script>
-  // ── Load IP: from URL param ?esp=, then localStorage ────────
+  // ── Pre-fill IP from ?esp= URL param or localStorage ─────────
   const ipInput  = document.getElementById('esp-ip');
   const urlParam = new URLSearchParams(window.location.search).get('esp');
-  const saved    = urlParam || localStorage.getItem('esp32_ip') || '';
-  if (saved) {
-    ipInput.value = saved;
-    localStorage.setItem('esp32_ip', saved);
+  const savedIP  = urlParam || localStorage.getItem('esp32_ip') || '';
+  if (savedIP) {
+    ipInput.value = savedIP;
+    localStorage.setItem('esp32_ip', savedIP);
   }
 
   function saveIP() {
     const val = ipInput.value.trim();
-    if (val) {
-      localStorage.setItem('esp32_ip', val);
-      ipInput.style.borderColor = '#22c55e';
-      setTimeout(() => ipInput.style.borderColor = '', 1000);
-    }
+    if (!val) return;
+    localStorage.setItem('esp32_ip', val);
+    ipInput.style.borderColor = '#22c55e';
+    setTimeout(() => ipInput.style.borderColor = '', 1200);
   }
 
   // ── Get GPS ──────────────────────────────────────────────────
   function getGPS() {
     const btn = document.getElementById('gps-btn');
     const st  = document.getElementById('status');
+    const ip  = ipInput.value.trim() || savedIP;
 
-    const ip = ipInput.value.trim() || localStorage.getItem('esp32_ip') || '';
     if (!ip) {
-      st.style.color = '#f87171';
-      st.textContent = '⚠️ Please enter your ESP32 IP address first!';
+      st.style.color   = '#f87171';
+      st.textContent   = '⚠️ Please enter the ESP32 IP address first!';
       ipInput.focus();
       return;
     }
 
-    // Save IP if not saved yet
     localStorage.setItem('esp32_ip', ip);
 
     if (!navigator.geolocation) {
@@ -336,10 +344,10 @@
       return;
     }
 
-    btn.disabled = true;
-    btn.textContent = '⏳ Getting location...';
-    st.style.color  = '#38bdf8';
-    st.textContent  = 'Waiting for GPS signal...';
+    btn.disabled      = true;
+    btn.textContent   = '⏳ Getting location...';
+    st.style.color    = '#38bdf8';
+    st.textContent    = 'Waiting for GPS signal...';
 
     navigator.geolocation.getCurrentPosition(
       pos => {
@@ -347,27 +355,40 @@
         const lng = pos.coords.longitude;
         const acc = Math.round(pos.coords.accuracy);
 
-        // Update UI
-        document.getElementById('lat-val').textContent  = lat.toFixed(6);
-        document.getElementById('lng-val').textContent  = lng.toFixed(6);
-        document.getElementById('acc-badge').textContent = '~' + acc + ' metres accuracy';
+        // Show coordinates
+        document.getElementById('lat-val').textContent  = lat.toFixed(7);
+        document.getElementById('lng-val').textContent  = lng.toFixed(7);
+        document.getElementById('acc-chip').textContent = '~' + acc + ' metres accuracy';
+        document.getElementById('coords-card').style.display = 'block';
 
-        // Build the ESP32 URL — a plain navigation link (not fetch)
-        // This works even from HTTPS → HTTP because it's a user-initiated anchor tap
-        const url = 'http://' + ip + '/setgps?lat=' + lat + '&lng=' + lng + '&acc=' + acc;
-        document.getElementById('send-link').href = url;
-        document.getElementById('result-box').style.display = 'block';
+        // Build the ESP32 URL
+        const esp32Url = 'http://' + ip + '/setgps?lat=' + lat + '&lng=' + lng + '&acc=' + acc;
+
+        // Generate QR code via Google Charts API (reliable, no JS lib needed)
+        const qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/'
+          + '?size=200x200'
+          + '&ecc=M'
+          + '&data=' + encodeURIComponent(esp32Url);
+
+        document.getElementById('qr-img').src         = qrApiUrl;
+        document.getElementById('fallback-link').href = esp32Url;
+        document.getElementById('fallback-link').textContent = esp32Url;
+        document.getElementById('qr-card').style.display = 'block';
 
         st.style.color  = '#4ade80';
-        st.textContent  = '✅ GPS obtained! Tap the green button below to send.';
+        st.textContent  = '✅ GPS obtained! Scan the QR code below.';
         btn.textContent = '🔄 Refresh GPS';
         btn.disabled    = false;
+
+        // Smooth scroll to QR
+        document.getElementById('qr-card')
+          .scrollIntoView({ behavior: 'smooth', block: 'start' });
       },
       err => {
         const msgs = {
           1: 'Permission denied — please allow location access.',
-          2: 'Position unavailable. Try outdoors.',
-          3: 'Timed out. Try again.'
+          2: 'Position unavailable. Try moving outdoors.',
+          3: 'Timed out. Please try again.'
         };
         st.style.color  = '#f87171';
         st.textContent  = '❌ ' + (msgs[err.code] || err.message);
