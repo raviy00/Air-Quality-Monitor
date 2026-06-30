@@ -455,31 +455,33 @@ body {
 /* ── Responsive Mobile Layout ──────────────────────────────── */
 @media (max-width: 768px) {
   body {
-    height: auto;
-    overflow: auto; /* Enable native page scrolling on mobile */
+    height: 100dvh;
+    overflow: hidden; /* Prevent full-page bounce */
   }
   
   .split-layout {
-    flex-direction: column; /* Map at top, sidebar at bottom */
-    height: auto;
+    flex-direction: column; 
+    height: 100dvh;
   }
   
   .map-panel {
-    height: 40vh; /* Map takes up top 40% of screen */
-    min-height: 250px;
+    height: 35dvh; /* Make map smaller so you can see more controls */
+    min-height: 200px;
     width: 100%;
     flex: none;
-    order: -1; /* Ensures map is visually first */
+    order: -1;
   }
   
   .sidebar {
     width: 100%;
-    min-width: 0; /* Remove 400px restriction */
-    height: auto; /* Let content dictate height */
-    overflow-y: visible; /* Disable internal scrolling */
+    min-width: 0;
+    flex: 1; /* Take remaining space */
+    height: auto;
+    overflow-y: auto; /* Sidebar scrolls independently */
     border-right: none;
     border-top: 2px solid var(--border-strong);
     padding: var(--space-md);
+    padding-bottom: 40px; /* Extra padding for mobile scroll ease */
   }
 
   /* Make tracking controls fit better on small screens */
