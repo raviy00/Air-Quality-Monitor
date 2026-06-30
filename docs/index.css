@@ -465,8 +465,8 @@ body {
   }
   
   .map-panel {
-    height: 35dvh; /* Make map smaller so you can see more controls */
-    min-height: 200px;
+    height: 25dvh; /* Made map significantly smaller (25%) */
+    min-height: 150px;
     width: 100%;
     flex: none;
     order: -1;
