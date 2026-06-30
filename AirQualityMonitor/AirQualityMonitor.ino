@@ -87,9 +87,10 @@ const char DASHBOARD[] PROGMEM = R"rawhtml(
     .loc-card h3{font-size:.68rem;color:#64748b;text-transform:uppercase;
                  letter-spacing:1px;margin-bottom:10px}
     #loc-text{font-size:.88rem;color:#94a3b8;line-height:1.7}
-    #gps-btn{margin-top:12px;width:100%;padding:12px;background:#2563eb;color:white;
+    .action-btn{margin-top:12px;width:100%;padding:12px;background:#2563eb;color:white;
              border:none;border-radius:12px;font-size:.88rem;cursor:pointer;font-weight:600}
-    #gps-btn:disabled{background:#1e3a6e;color:#64748b;cursor:default}
+    .action-btn:disabled{background:#1e3a6e;color:#64748b;cursor:default}
+    #calc-btn{background:#7c3aed;margin-top:8px}
     .ip-loc{background:#1e293b;border-radius:12px;padding:10px 14px;
             font-size:.75rem;color:#475569;margin-bottom:14px}
     .scale{background:#1e293b;border-radius:16px;padding:14px 16px;margin-bottom:14px}
@@ -132,9 +133,10 @@ const char DASHBOARD[] PROGMEM = R"rawhtml(
   <div class="ip-loc" id="ip-loc">&#127757; Fetching approximate location...</div>
 
   <div class="loc-card">
-    <h3>&#128205; Exact GPS Location</h3>
+    <h3>&#128205; Exact GPS Location & Tools</h3>
     <div id="loc-text">Use the GitHub Pages helper to send your exact GPS location.</div>
-    <button id="gps-btn" onclick="openGPSHelper()">&#128279; Open GPS Helper (GitHub Pages)</button>
+    <button class="action-btn" id="gps-btn" onclick="openGPSHelper()">&#128279; Open GPS Helper</button>
+    <button class="action-btn" id="calc-btn" onclick="openTripCalc()">&#128663; Open CO&#8322; Trip Calculator</button>
   </div>
 
   <div class="scale">
@@ -263,6 +265,11 @@ const char DASHBOARD[] PROGMEM = R"rawhtml(
       const ip  = window.location.hostname;
       const url = 'https://raviy00.github.io/Air-Quality-Monitor/?esp=' + ip;
       window.open(url, '_blank');
+    }
+
+    function openTripCalc() {
+      // Open the CO2 Trip Calculator
+      window.open('http://localhost:8080/index.html', '_blank');
     }
 
     fetchData();
