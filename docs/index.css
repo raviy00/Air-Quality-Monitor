@@ -454,22 +454,32 @@ body {
 
 /* ── Responsive Mobile Layout ──────────────────────────────── */
 @media (max-width: 768px) {
+  body {
+    height: auto;
+    overflow: auto; /* Enable native page scrolling on mobile */
+  }
+  
   .split-layout {
-    flex-direction: column-reverse;
+    flex-direction: column; /* Map at top, sidebar at bottom */
+    height: auto;
+  }
+  
+  .map-panel {
+    height: 40vh; /* Map takes up top 40% of screen */
+    min-height: 250px;
+    width: 100%;
+    flex: none;
+    order: -1; /* Ensures map is visually first */
   }
   
   .sidebar {
     width: 100%;
-    min-width: 100%;
-    height: 60vh;
+    min-width: 0; /* Remove 400px restriction */
+    height: auto; /* Let content dictate height */
+    overflow-y: visible; /* Disable internal scrolling */
     border-right: none;
     border-top: 2px solid var(--border-strong);
     padding: var(--space-md);
-  }
-  
-  .map-panel {
-    height: 40vh;
-    width: 100%;
   }
 
   /* Make tracking controls fit better on small screens */
